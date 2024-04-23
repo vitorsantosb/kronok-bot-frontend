@@ -3,8 +3,12 @@ import React from 'react';
 import {useFormik} from 'formik';
 import loginValidationSchema from '@/components/Login/schemas/login_form.schema.js';
 import {ValidateLoginUser} from '@/services/routes/user/post.js';
+import {useNavigate} from 'react-router-dom';
+import {userRoutes} from '@/models/routes.js';
 
 function Login() {
+  const navigate = useNavigate();
+
   const loginForm = useFormik({
     initialValues: {
       email: '',
@@ -13,10 +17,13 @@ function Login() {
     validationSchema: loginValidationSchema,
     validateOnChange: false,
     onSubmit: async (values) => {
-      const response = await ValidateLoginUser(values);
+
+      /*const response = await ValidateLoginUser(values);
       if (response.status === 200) {
         console.log(response);
-      }
+      }*/
+      console.log(values);
+      navigate(userRoutes.DASHBOARD);
     },
   })
 
@@ -29,7 +36,7 @@ function Login() {
         name="email"
         variant="filled"
         label="Email"
-        style={{background: "#C0C0C0"}}
+        style={{background: "#FFFFFF"}}
         placeholder="Email"
         value={loginForm.values.email}
         onChange={(e) => {

@@ -4,7 +4,6 @@ const newUser = {
   email: "",
   password: "",
   role: {},
-  shop_owned: [],
   admin: {
     id: "",
     is_admin: false

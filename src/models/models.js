@@ -1,2 +1,2 @@
-export * from './shop.js';
 export * from './user.js';
+export * from './routes.js';
