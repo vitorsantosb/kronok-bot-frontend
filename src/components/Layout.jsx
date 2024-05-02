@@ -37,7 +37,7 @@ const Layout = () => {
                 <AppShell
                     header={{ height: 60, offset: false }}
                     navbar={{
-                        width: mobileOpened || desktopOpened ? "300px" : "auto",
+                        width: "auto",
                         breakpoint: "sm",
                     }}
                     padding="md"
@@ -57,6 +57,7 @@ const Layout = () => {
                     </AppShell.Header>
                     <AppShell.Navbar
                         style={{
+                            width: "auto",
                             border: "2px solid #2D2F39",
                             backgroundColor: "#161A23",
                             overflowY: "auto",

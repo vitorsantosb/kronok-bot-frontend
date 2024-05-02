@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Avatar, Box, Burger, Center, Flex, Group, NavLink, Portal, Stack, Text } from "@mantine/core";
+import { Link, useNavigate } from "react-router-dom";
+import { Avatar, Box, Burger, Button, Center, Collapse, Flex, Group, NavLink, Portal, Stack, Text, Tooltip, UnstyledButton, rem } from "@mantine/core";
 import { IconGauge, IconFingerprint, IconHome, IconDashboard, IconNotebook, IconCalendarEvent, IconReceipt, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { IconCalendar, IconMessage, IconSettings, IconUser } from "@tabler/icons-react";
 import { getMenuTree } from "@/models/models";
@@ -11,79 +11,104 @@ import IconCustomHome from "../../../assets/menu/IconCustomHome";
 const getMantineIcons = (icon) => {
     switch (icon) {
         case "IconCustomHome":
-            return <IconCustomHome size={{ width: 20, height: 20 }} style={{ strokeWidth: 1.5, fill: "#FFFFFF" }} />;
+            return <IconCustomHome size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
         case "IconGauge":
-            return <IconGauge stroke={1.5} />;
+            return <IconGauge stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconFingerprint":
-            return <IconFingerprint stroke={1.5} />;
+            return <IconFingerprint stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconCalendar":
-            return <IconCalendar stroke={1.5} />;
+            return <IconCalendar stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconCalendarEvent":
-            return <IconCalendarEvent stroke={1.5} />;
+            return <IconCalendarEvent stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconMessage":
-            return <IconMessage stroke={1.5} />;
+            return <IconMessage stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconSettings":
-            return <IconSettings stroke={1.5} />;
+            return <IconSettings stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconUser":
-            return <IconUser stroke={1.5} />;
+            return <IconUser stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconUsersGroup":
-            return <IconUsersGroup stroke={1.5} />;
+            return <IconUsersGroup stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconHome":
-            return <IconHome stroke={1.5} />;
+            return <IconHome stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconDashboard":
-            return <IconDashboard stroke={1.5} />;
+            return <IconDashboard stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconNotebook":
-            return <IconNotebook stroke={1.5} />;
+            return <IconNotebook stroke={1.0} style={{ cursor: "pointer" }} />;
         case "IconReport":
-            return <IconReceipt stroke={1.5} />;
+            return <IconReceipt stroke={1.0} style={{ cursor: "pointer" }} />;
         default:
             return "";
     }
 };
-const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened) => {
+const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive) => {
     const { label, children, leftSection, ...rest } = menuItem;
-
+    const [toggleChildren, setToggleChildren] = useState(false);
     function redirectToUserRoute(userRoute) {
-        toggleMobile(false);
         navigate(userRoute.link);
     }
 
     function redirectionToInitialPage() {
-        toggleMobile(false);
         navigate(userRoutes.HOMEPAGE);
     }
     function handleClickMenuItem(userRoute) {
+        if (rest.childrenOffset && !mobileOpened && !desktopOpened) {
+            toggleMobile(true);
+        }
+
         if (userRoute.link) {
             currentUser ? (currentUser?.role?.slug ? redirectToUserRoute(userRoute) : redirectionToInitialPage()) : navigate(userRoutes.HOMEPAGE);
         }
     }
 
     return (
-        <NavLink key={index} label={mobileOpened || desktopOpened ? label : null} onClick={() => handleClickMenuItem(rest)} leftSection={getMantineIcons(leftSection)} {...rest} w={mobileOpened || desktopOpened ? "100%" : "20px"}>
-            {children && Array.isArray(children) && <div style={{ paddingLeft: rest.childrenOffset || 0 }}>{children.map((child, childIndex) => renderNavLink(child, childIndex, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened))}</div>}
-        </NavLink>
+        <Tooltip key={index} label={label} position="right" withArrow disabled={mobileOpened || desktopOpened}>
+            <Box
+                key={index}
+                onClick={() => {
+                    setActive(index);
+                    setToggleChildren(!toggleChildren);
+                    handleClickMenuItem(rest);
+                }}
+                c={"var(--mantine-color-white)"}
+            >
+                {mobileOpened || desktopOpened ? (
+                    <Group w={"100%"} style={{ color: "var(--mantine-color-white)", display: "flex", gap: "0.5rem", cursor: "pointer" }}>
+                        {leftSection && getMantineIcons(leftSection)}
+                        {label}
+                        {children && (toggleChildren ? <IconChevronLeft size={14} /> : <IconChevronRight size={14} />)}
+                    </Group>
+                ) : (
+                    getMantineIcons(leftSection)
+                )}
+                {children && (
+                    <Collapse in={toggleChildren} active={index === active ? index : null} style={{ paddingLeft: mobileOpened || desktopOpened ? rest.childrenOffset || 0 : 0 }}>
+                        {children.map((child, childIndex) => renderNavLink(child, childIndex, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive))}
+                    </Collapse>
+                )}
+            </Box>
+        </Tooltip>
     );
 };
 
-const renderMenu = (menuObject, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened) => {
+const renderMenu = (menuObject, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive) => {
     return Object.keys(menuObject).map((key, index) => {
         const menuItem = menuObject[key];
-        return renderNavLink({ label: key, ...menuItem }, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened);
+        return renderNavLink({ label: key, ...menuItem }, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive);
     });
 };
 
 export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, mobileOpened, desktopOpened }) {
     const [menuOpen, setMenuOpen] = useState(true);
+    const [active, setActive] = useState(0);
 
     const authorizedRole = currentUser?.role?.slug?.toUpperCase();
     const modifiedMenuTree = getMenuTree(currentUser?.role?.permissions);
-    //AllowedRoutesByRole[authorizedRole]
     const navigate = useNavigate();
 
     return (
         <>
             {authorizedRole ? (
-                <Flex style={{ position: "relative" }} p={"1rem"} w={"100%"} h={"100svh"} justify={"space-between"} direction={"column"} bg={"#161A23"}>
+                <Flex style={{ position: "relative" }} w={"100%"} h={"100svh"} p={"1rem"} justify={"space-between"} direction={"column"} bg={"#161A23"}>
                     <Stack>
                         <Flex
                             style={{
@@ -143,9 +168,9 @@ export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, m
                                 </Group>
                             </Group>
                         </Flex>
-                        <Flex pb={"20svh"} p={"1rem"} direction={"column"}>
-                            {renderMenu(modifiedMenuTree, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened)}
-                        </Flex>
+                        <Stack align={mobileOpened || desktopOpened ? "left" : "center"} gap={0}>
+                            {renderMenu(modifiedMenuTree, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive)}
+                        </Stack>
                     </Stack>
                 </Flex>
             ) : (
