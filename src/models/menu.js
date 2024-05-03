@@ -6,7 +6,7 @@ export const menuTree = {
     },
     characters: {
         label: "Characters",
-        leftSection: "IconUser",
+        leftSection: "IconRPGSpace",
         childrenOffset: 28,
         children: [
             {
@@ -21,32 +21,32 @@ export const menuTree = {
     },
     updates: {
         label: "Updates",
-        leftSection: "IconList",
+        leftSection: "IconCustomUpdates",
         link: "/updates",
     },
     plans: {
         label: "Plans",
-        leftSection: "IconList",
+        leftSection: "IconCustomPlans",
         link: "/plans",
     },
     schedule: {
         label: "Schedule",
-        leftSection: "IconCalendar",
+        leftSection: "IconCustomSchedule",
         link: "/schedule",
     },
     settings: {
         label: "Settings",
-        leftSection: "IconSettings",
+        leftSection: "IconCustomSettings",
         link: "/settings",
     },
     help: {
         label: "Help",
-        leftSection: "IconMessage",
+        leftSection: "IconCustomHelp",
         link: "/help",
     },
     logout: {
         label: "Logout",
-        leftSection: "IconLogout",
+        leftSection: "IconCustomLogout",
         link: "/logout",
     },
 };

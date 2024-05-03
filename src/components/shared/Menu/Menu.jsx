@@ -1,41 +1,38 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Avatar, Box, Burger, Button, Center, Collapse, Flex, Group, NavLink, Portal, Stack, Text, Tooltip, UnstyledButton, rem } from "@mantine/core";
+import { Avatar, Box, Collapse, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconGauge, IconFingerprint, IconHome, IconDashboard, IconNotebook, IconCalendarEvent, IconReceipt, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { IconCalendar, IconMessage, IconSettings, IconUser } from "@tabler/icons-react";
 import { getMenuTree } from "@/models/models";
 import { userRoutes } from "@/models/models";
 import { IconUsersGroup } from "@tabler/icons-react";
 import IconCustomHome from "../../../assets/menu/IconCustomHome";
+import IconCustomHelp from "../../../assets/menu/IconCustomHelp";
+import IconCustomSchedule from "../../../assets/menu/IconCustomSchedule";
+import IconCustomLogout from "../../../assets/menu/IconCoustomLogout";
+import IconRPGSpace from "../../../assets/menu/IconRPGSpace";
+import IconCustomPlans from "../../../assets/menu/IconCustomPlans";
+import IconCustomUpdates from "../../../assets/menu/IconCustomUpdates";
+import IconCustomSettings from "../../../assets/menu/IconCustomSettings";
 
 const getMantineIcons = (icon) => {
     switch (icon) {
         case "IconCustomHome":
             return <IconCustomHome size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
-        case "IconGauge":
-            return <IconGauge stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconFingerprint":
-            return <IconFingerprint stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconCalendar":
-            return <IconCalendar stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconCalendarEvent":
-            return <IconCalendarEvent stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconMessage":
-            return <IconMessage stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconSettings":
-            return <IconSettings stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconUser":
-            return <IconUser stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconUsersGroup":
-            return <IconUsersGroup stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconHome":
-            return <IconHome stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconDashboard":
-            return <IconDashboard stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconNotebook":
-            return <IconNotebook stroke={1.0} style={{ cursor: "pointer" }} />;
-        case "IconReport":
-            return <IconReceipt stroke={1.0} style={{ cursor: "pointer" }} />;
+        case "IconCustomHelp":
+            return <IconCustomHelp size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconCustomSchedule":
+            return <IconCustomSchedule size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconCustomLogout":
+            return <IconCustomLogout size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconRPGSpace":
+            return <IconRPGSpace size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconCustomPlans":
+            return <IconCustomPlans size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconCustomUpdates":
+            return <IconCustomUpdates size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
+        case "IconCustomSettings":
+            return <IconCustomSettings size={{ width: 24, height: 24 }} style={{ strokeWidth: 2.5, fill: "#FFFFFF", cursor: "pointer" }} />;
         default:
             return "";
     }
