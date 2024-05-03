@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Box, Collapse, Divider, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
-import { IconGauge, IconFingerprint, IconHome, IconDashboard, IconNotebook, IconCalendarEvent, IconReceipt, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { IconCalendar, IconMessage, IconSettings, IconUser } from "@tabler/icons-react";
+import { IconChevronLeft, IconChevronRight, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
 import { getMenuTree } from "@/models/models";
 import { userRoutes } from "@/models/models";
-import { IconUsersGroup } from "@tabler/icons-react";
 import IconCustomHome from "../../../assets/menu/IconCustomHome";
 import IconCustomHelp from "../../../assets/menu/IconCustomHelp";
 import IconCustomSchedule from "../../../assets/menu/IconCustomSchedule";
@@ -37,7 +35,7 @@ const getMantineIcons = (icon) => {
             return "";
     }
 };
-const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive) => {
+const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild) => {
     const { label, children, leftSection, ...rest } = menuItem;
     const [toggleChildren, setToggleChildren] = useState(false);
     function redirectToUserRoute(userRoute) {
@@ -62,24 +60,28 @@ const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mob
             <Box
                 key={index}
                 onClick={() => {
-                    setActive(index);
-                    setToggleChildren(!toggleChildren);
+                    rest.active &&
+                        setActive((prev) => {
+                            return rest.active;
+                        });
+                    rest.activeChild && setActiveChild(rest.activeChild);
+                    toggleChildren === false && setToggleChildren(!toggleChildren);
                     handleClickMenuItem(rest);
                 }}
                 c={"var(--mantine-color-white)"}
             >
                 {mobileOpened || desktopOpened ? (
-                    <Group w={"100%"} style={{ color: "var(--mantine-color-white)", display: "flex", gap: "0.5rem", cursor: "pointer" }}>
+                    <Group w={"100%"} style={{ position: "relative", color: "var(--mantine-color-white)", display: "flex", gap: "0.5rem", borderRadius: "0.5rem", padding: "0.2rem  0.5rem", cursor: "pointer" }} bg={active === rest.active || activeChild === rest.activeChild ? "#2D2F39" : "transparent"}>
                         {leftSection && getMantineIcons(leftSection)}
                         {label}
-                        {children && (toggleChildren ? <IconChevronLeft size={14} /> : <IconChevronRight size={14} />)}
+                        {children && (toggleChildren ? <IconChevronUp size={14} baselineShift={2} style={{ position: "absolute", left: "100%" }} onClick={() => setToggleChildren(false)} /> : <IconChevronDown size={14} style={{ position: "absolute", left: "100%" }} onClick={() => setToggleChildren(true)} />)}
                     </Group>
                 ) : (
                     getMantineIcons(leftSection)
                 )}
                 {children && (
-                    <Collapse in={toggleChildren} active={index === active ? index : null} style={{ paddingLeft: mobileOpened || desktopOpened ? rest.childrenOffset || 0 : 0 }}>
-                        {children.map((child, childIndex) => renderNavLink(child, childIndex, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive))}
+                    <Collapse in={toggleChildren} active={index === active ? index : null} style={{ paddingLeft: mobileOpened || desktopOpened ? rest.childrenOffset || 0 : 0, fillOpacity: 0.75, fontSize: "1rem" }}>
+                        {children.map((child, childIndex) => renderNavLink(child, childIndex, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild))}
                     </Collapse>
                 )}
             </Box>
@@ -87,15 +89,16 @@ const renderNavLink = (menuItem, index, navigate, currentUser, toggleMobile, mob
     );
 };
 
-const renderMenu = (menuObject, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive) => {
+const renderMenu = (menuObject, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild) => {
     return Object.keys(menuObject).map((key, index) => {
         const menuItem = menuObject[key];
-        return renderNavLink({ label: key, ...menuItem }, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive);
+        return renderNavLink({ label: key, ...menuItem }, index, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild);
     });
 };
 
 export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, mobileOpened, desktopOpened }) {
-    const [active, setActive] = useState(0);
+    const [active, setActive] = useState(-1);
+    const [activeChild, setActiveChild] = useState(-1);
 
     const authorizedRole = currentUser?.role?.slug?.toUpperCase();
     const modifiedMenuTree = getMenuTree(currentUser?.role?.permissions);
@@ -104,8 +107,8 @@ export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, m
     return (
         <>
             {authorizedRole ? (
-                <Flex style={{ position: "relative" }} w={"100%"} h={"100svh"} p={"1rem"} justify={"space-between"} direction={"column"} bg={"#161A23"}>
-                    <Stack>
+                <Flex style={{ position: "relative" }} w={"100%"} h={"100svh"} pt={"1rem"} pb={"1rem"} pl={"1rem"} pr={"1.1rem"} justify={"space-between"} direction={"column"} bg={"#161A23"}>
+                    <Stack h={"100%"}>
                         <Flex
                             style={{
                                 position: "sticky",
@@ -172,8 +175,25 @@ export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, m
                                 },
                             }}
                         />
-                        <Stack align={mobileOpened || desktopOpened ? "left" : "center"} gap={0}>
-                            {renderMenu(modifiedMenuTree, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive)}
+                        <Stack align={mobileOpened || desktopOpened ? "left" : "center"} justify={"space-between"} h={"100%"} pos={"relative"}>
+                            <Flex direction={"column"} h={"100%"} gap={"1rem"}>
+                                {renderMenu(modifiedMenuTree.main, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild)}
+                            </Flex>
+                            <Divider
+                                styles={{
+                                    root: {
+                                        background: "#2D2F39",
+                                        opacity: 0.5,
+                                    },
+                                }}
+                                my={10}
+                            />
+                            <Flex direction={"column"} h={"100%"} gap={"1rem"}>
+                                {renderMenu(modifiedMenuTree.options, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild)}
+                            </Flex>
+                            <Flex direction={"column"} style={{ position: "absolute", top: "90%" }} gap={"1rem"}>
+                                {renderMenu(modifiedMenuTree.footer, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive, activeChild, setActiveChild)}
+                            </Flex>
                         </Stack>
                     </Stack>
                 </Flex>
