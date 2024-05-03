@@ -5,10 +5,10 @@ function IconCustomSettings({ size, style }) {
         ...style,
         fillOpacity: 0.5,
     };
-    const viewBox = `0 0 ${size.width} ${size.height}`;
+    const viewBox = `-3 -3 ${size.width} ${size.height}`;
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox={viewBox} width={size.width} height={size.height} style={style}>
-            <g clip-path="url(#clip0_1255_236)">
+            <g clipPath="url(#clip0_1255_236)">
                 <path
                     fillRule="evenodd"
                     clipRule="evenodd"

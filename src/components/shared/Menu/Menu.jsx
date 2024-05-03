@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Avatar, Box, Collapse, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Avatar, Box, Collapse, Divider, Flex, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { IconGauge, IconFingerprint, IconHome, IconDashboard, IconNotebook, IconCalendarEvent, IconReceipt, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { IconCalendar, IconMessage, IconSettings, IconUser } from "@tabler/icons-react";
 import { getMenuTree } from "@/models/models";
@@ -95,7 +95,6 @@ const renderMenu = (menuObject, navigate, currentUser, toggleMobile, mobileOpene
 };
 
 export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, mobileOpened, desktopOpened }) {
-    const [menuOpen, setMenuOpen] = useState(true);
     const [active, setActive] = useState(0);
 
     const authorizedRole = currentUser?.role?.slug?.toUpperCase();
@@ -165,6 +164,14 @@ export function Menu({ onMenuButton, currentUser, toggleMobile, toggleDesktop, m
                                 </Group>
                             </Group>
                         </Flex>
+                        <Divider
+                            styles={{
+                                root: {
+                                    background: "#2D2F39",
+                                    opacity: 0.5,
+                                },
+                            }}
+                        />
                         <Stack align={mobileOpened || desktopOpened ? "left" : "center"} gap={0}>
                             {renderMenu(modifiedMenuTree, navigate, currentUser, toggleMobile, mobileOpened, desktopOpened, active, setActive)}
                         </Stack>
