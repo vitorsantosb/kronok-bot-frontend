@@ -1,9 +1,7 @@
+import SearchBar from "./SearchBar";
+
 function Header() {
-  return (
-    <div>
-      Menu
-    </div>
-  )
+    return <SearchBar />;
 }
 
 export default Header;

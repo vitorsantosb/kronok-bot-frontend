@@ -107,6 +107,80 @@ export const menuTree = {
     },
 };
 
+export const activeMenu = {
+    dashboard: {
+        link: "/dashboard",
+        active: 0,
+    },
+    characters: {
+        active: 1,
+        children: [
+            {
+                link: "/list-character",
+                activeChild: 1.1,
+            },
+            {
+                link: "/create-character",
+                activeChild: 1.2,
+            },
+        ],
+    },
+    updates: {
+        link: "/updates",
+        active: 2,
+    },
+    plans: {
+        active: 3,
+        children: [
+            {
+                link: "/subscribe",
+                activeChild: 3.1,
+            },
+            {
+                link: "/plans",
+                activeChild: 3.2,
+            },
+            {
+                link: "/plans",
+                activeChild: 3.2,
+            },
+            {
+                link: "/plans",
+                activeChild: 3.2,
+            },
+        ],
+    },
+    schedule: {
+        link: "/schedule",
+        active: 4,
+    },
+    settings: {
+        active: 5,
+        children: [
+            {
+                link: "/link-account",
+                activeChild: 5.1,
+            },
+            {
+                link: "/manage-accounts",
+                activeChild: 5.2,
+            },
+            {
+                link: "/general-configuration",
+                activeChild: 5.3,
+            },
+        ],
+    },
+    help: {
+        link: "/help",
+        active: 6,
+    },
+    logout: {
+        link: "/logout",
+        active: 7,
+    },
+};
+
 export function getMenuTree() {
     return menuTree;
 }
