@@ -1,7 +1,7 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import { activeMenu } from "../../models/menu";
+import { menuTree } from "../../models/menu";
 
 const LayoutContext = createContext({});
 
@@ -14,8 +14,15 @@ const findActive = (menu, active) => {
     return -1;
 };
 export const LayoutProvider = ({ children }) => {
-    const { pathname } = useLocation();
+    let activeMenu = {};
+    Object.values(menuTree).forEach((menu) => {
+        activeMenu = {
+            ...activeMenu,
+            ...menu,
+        };
+    });
 
+    const { pathname } = useLocation();
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
     const [active, setActive] = useState(-1);

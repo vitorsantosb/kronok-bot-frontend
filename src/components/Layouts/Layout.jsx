@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { userRoutes } from "@/models/routes.js";
 import Menu from "@/components/shared/Menu/Menu.jsx";
 import config from "@/config/projectConfig.json";
@@ -7,7 +7,9 @@ import { LayoutProvider, useLayoutContext } from "./LayoutProvider";
 import { AppShell } from "@mantine/core";
 
 const Layout = () => {
-    const { pathname } = useLayoutContext();
+    const { pathname } = useLocation();
+
+    console.log(pathname);
     return (
         <LayoutProvider>
             {pathname !== userRoutes.HOMEPAGE && pathname !== "*" ? (
